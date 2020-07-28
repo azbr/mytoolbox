@@ -11,6 +11,11 @@ import statsmodels.api as sm
 # This module contains methods to ease more complex analysis of data 
 # for data science/statistical cases
 
+def __normalize(serie: pd.Series):
+
+    if serie.std() > 0.:
+        return (serie - serie.mean())/serie.std()
+
 
 def plot_normality(df: pd.DataFrame, names=Union[List,str]):
     """Metodo para plotar visualização de testes de normalidade resumidos
@@ -22,6 +27,8 @@ def plot_normality(df: pd.DataFrame, names=Union[List,str]):
     """
     # TODO: incluir validação de nomes 
     # TODO: incluir teste para tipos da lista names
+
+    pd.Series.normalize = __normalize
 
     colsize = len(names)
     fig, axes = plt.subplots(nrows=colsize, ncols=2, figsize=(20,20));
