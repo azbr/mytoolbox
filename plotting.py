@@ -36,3 +36,24 @@ def plot_normality(df: pd.DataFrame, names=Union[List,str]):
     for i, name in enumerate(names):
         df[name].plot(kind='box', ax=axes[i][0]);
         sm.qqplot(df[name].normalize(), line='45', ax=axes[i][1]);
+        
+
+def plot_confusion_matrix(y_test, y_pred, title='Confusion matrix', classes=['Reprov', 'Aprov']):    
+    """Método para plotar a matriz de confusão usando matplotlib
+    Args:
+        y_test (pd.Series): valores verdadeiros do target
+        y_pred (pd.Series): valores preditos pelo modelo
+    """
+    cm = confusion_matrix(y_test, y_pred)
+    plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title(title, fontsize=14)
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes)
+    plt.yticks(tick_marks, classes)
+    
+    thresh = cm.max() / 1.5
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j]), horizontalalignment="center", color="white" if cm[i, j] > thresh else "black")
+        plt.tight_layout()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
