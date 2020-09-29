@@ -37,6 +37,42 @@ def plot_normality(df: pd.DataFrame, names=Union[List,str]):
         df[name].plot(kind='box', ax=axes[i][0]);
         sm.qqplot(df[name].normalize(), line='45', ax=axes[i][1]);
         
+def average_cost(y_test, y_pred, cost=np.eye(2)):
+    c = confusion_matrix(y_test,y_pred)
+    score = np.sum(c*cost)/np.sum(c)
+    return score
+
+def change_threshold(y_true, y_prob, cost, thresholds):
+    """Método que cria diversos heatmap considerando vários thresholds
+    """
+    if thresholds is None:
+        thresholds = np.arange(0.1, 1.0, 0.1)
+    plt.figure(figsize=(10,10))
+
+    j = 1
+    for i in thresholds:
+        i = round(i, 1)
+        y_pred = np.where(y_prob >= i, 1, 0)
+
+        plt.subplot(4, 3, j)
+        j += 1
+
+        # Compute confusion matrix
+        cnf_matrix = confusion_matrix(y_true,y_pred)
+        np.set_printoptions(precision=2)
+        
+        acc = round(accuracy_score(y_true, y_pred), 2)
+        rec = round(recall_score(y_true, y_pred), 2)
+        pre = round(precision_score(y_true, y_pred), 2)
+        auc = round(roc_auc_score(y_true, y_pred), 2)
+        cos = round(average_cost(y_true, y_pred, cost), 2)
+
+        print(f"Threshold: {i} | Roc Auc: {auc:5} | Accuracy: {acc:5} | Recall: {rec:5} | Precision: {pre:5} | Avg cost: {cos}")
+
+        # Plot non-normalized confusion matrix
+        plot_confusion_matrix(y_true, y_pred, title=f'Threshold >= {round(i, 1)}')
+    plt.show()
+
 
 def plot_confusion_matrix(y_test, y_pred, title='Confusion matrix', classes=['Reprov', 'Aprov']):    
     """Método para plotar a matriz de confusão usando matplotlib
