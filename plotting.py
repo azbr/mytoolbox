@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 from typing import Union, List
 
@@ -5,8 +6,10 @@ import numpy as np
 import pandas as pd
 import scipy.stats as st
 
+import itertools
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
+from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score, confusion_matrix
 
 # This module contains methods to ease more complex analysis of data 
 # for data science/statistical cases
@@ -70,7 +73,7 @@ def change_threshold(y_true, y_prob, cost, thresholds):
         print(f"Threshold: {i} | Roc Auc: {auc:5} | Accuracy: {acc:5} | Recall: {rec:5} | Precision: {pre:5} | Avg cost: {cos}")
 
         # Plot non-normalized confusion matrix
-        plot_confusion_matrix(y_true, y_pred, title=f'Threshold >= {round(i, 1)}')
+        plot_confusion_matrix(y_true, y_pred, title=f'Threshold >= {i:.2f}')
     plt.show()
 
 
