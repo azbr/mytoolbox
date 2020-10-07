@@ -54,7 +54,6 @@ def change_threshold(y_true, y_prob, cost, thresholds):
 
     j = 1
     for i in thresholds:
-        i = round(i, 1)
         y_pred = np.where(y_prob >= i, 1, 0)
 
         plt.subplot(4, 3, j)
@@ -70,7 +69,7 @@ def change_threshold(y_true, y_prob, cost, thresholds):
         auc = round(roc_auc_score(y_true, y_pred), 2)
         cos = round(average_cost(y_true, y_pred, cost), 2)
 
-        print(f"Threshold: {i} | Roc Auc: {auc:5} | Accuracy: {acc:5} | Recall: {rec:5} | Precision: {pre:5} | Avg cost: {cos}")
+        print(f"Threshold: {i:.2f} | Roc Auc: {auc:5} | Accuracy: {acc:5} | Recall: {rec:5} | Precision: {pre:5} | Avg cost: {cos}")
 
         # Plot non-normalized confusion matrix
         plot_confusion_matrix(y_true, y_pred, title=f'Threshold >= {i:.2f}')
